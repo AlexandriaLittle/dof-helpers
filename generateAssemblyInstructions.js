@@ -44,27 +44,39 @@ var topComponent = yaml.safeLoad(fs.readFileSync(topComponentPath + "/" + output
 var instructionsList = [];
 
 function processComponent(component) {
-	if (component.assemblySteps.length > 0) {
-		component.numTools = Object.getOwnPropertyNames(component.tools).length;
-		component.numParts = Object.getOwnPropertyNames(component.parts).length;
-		instructionsList.push(component);
-		component.hasPrecautions = component.precautions.length > 0;
-	}
+    try {
+	    if (component.assemblySteps.length > 0) {
+	        component.numTools = Object.getOwnPropertyNames(component.tools).length;
+	        component.numParts = Object.getOwnPropertyNames(component.parts).length;
+	        instructionsList.push(component);
+	        component.hasPrecautions = component.precautions.length > 0;
+	    }
+    } catch (error) {
+        // console.log(error);
+    }
 	
 	for (var part in component.parts) {  // TODO: reverse the order of this loop
-		if(component.parts.hasOwnProperty(part)) {
-			var selectedComponentID = component.parts[part].options[component.parts[part].selectedOption];
-			component.hasPrecautions = component.hasPrecautions || component.components[selectedComponentID].precautions.length > 0;
-			processComponent(component.components[selectedComponentID]);
-		}
+        try {
+	    	if(component.parts.hasOwnProperty(part)) {
+	    		var selectedComponentID = component.parts[part].options[component.parts[part].selectedOption];
+	    		component.hasPrecautions = component.hasPrecautions || component.components[selectedComponentID].precautions.length > 0;
+	    		processComponent(component.components[selectedComponentID]);
+	    	}
+        } catch (error) {
+            // console.log(error);
+        }
 	}
 	
 	for (var tool in component.tools) {  // TODO: reverse the order of this loop
-		if(component.tools.hasOwnProperty(tool)) {
-			var selectedComponentID = component.tools[tool].options[component.tools[tool].selectedOption];
-			component.hasPrecautions = component.hasPrecautions || component.components[selectedComponentID].precautions.length > 0;
-			processComponent(component.components[selectedComponentID]);
-		}
+        try {
+		    if(component.tools.hasOwnProperty(tool)) {
+		    	var selectedComponentID = component.tools[tool].options[component.tools[tool].selectedOption];
+		    	component.hasPrecautions = component.hasPrecautions || component.components[selectedComponentID].precautions.length > 0;
+		    	processComponent(component.components[selectedComponentID]);
+		    }
+        } catch (error) {
+            // console.log(error);
+        }
 	}
 }
 
