@@ -92,6 +92,7 @@ function parseComponent(componentPath, outDir, compModelName) {
 									.parseAndRender(component.assemblySteps[s].summary, component)
 									.then(function(renderedSummary) {
 										component.assemblySteps[s].summary = renderedSummary;
+										console.log(component.assemblySteps[s].summary) //ANL
 									}).catch(function(e) {
 										console.log(e);
 									}));
@@ -109,12 +110,16 @@ function parseComponent(componentPath, outDir, compModelName) {
 		console.log(e);
 	}
 
-	Promise.all(liquidPromises)
+	seanandalexa = new Promise(resolve => setTimeout(resolve, 5000));
+
+	liquidPromises.push(seanandalexa);
+
+	Promise.allSettled(liquidPromises)
 		.then(function() {
 			var componentFileName = componentPath + '/' + outDir + '/' + compModelName;
 			fs.writeFileSync(componentFileName, yaml.safeDump(component));
 			console.log('Component Model ' + componentFileName + ' built');
-		}).catch(function(e) {
+				}).catch(function(e) {
 			console.log(e);
 		});
 	
