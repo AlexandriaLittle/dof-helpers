@@ -108,6 +108,7 @@ function parseComponent(componentPath, outDir, compModelName) {
 		
 	} catch (e) {
 		console.log(e);
+		component.precautions = yaml.safeLoad(fs.readFileSync(componentPath + "/precautions.yaml", 'utf8'));
 	}
 
 	seanandalexa = new Promise(resolve => setTimeout(resolve, 5000));
