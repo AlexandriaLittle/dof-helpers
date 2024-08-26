@@ -83,6 +83,8 @@ function processComponent(component) {
 processComponent(topComponent);
 instructionsList.reverse();
 
+const uniqueArray = instructionsList.filter((object,index) => index === instructionsList.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)));
+
 var data = {};
 data.generationDate = new Date().toLocaleDateString("en-US", {
     "year": "numeric",
@@ -90,7 +92,7 @@ data.generationDate = new Date().toLocaleDateString("en-US", {
     "day": "numeric"
     });
 data.topComponent = topComponent;
-data.components = instructionsList;
+data.components = uniqueArray;
 
 var templateFile = fs.readFileSync(templatePath + '/' + templateName, 'utf8');
 engine
