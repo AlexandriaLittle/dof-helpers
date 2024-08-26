@@ -82,7 +82,7 @@ function parseComponent(componentPath, outDir, compModelName) {
 		processComponentItems(component, component.tools);
 		
 		component.precautions = yaml.safeLoad(fs.readFileSync(componentPath + "/precautions.yaml", 'utf8'));
-		
+
 		component.assemblySteps = yaml.safeLoad(fs.readFileSync(componentPath + "/assemblySteps.yaml", 'utf8'));
 		
 		for (step in component.assemblySteps) {
@@ -105,7 +105,20 @@ function parseComponent(componentPath, outDir, compModelName) {
 									}));
 			})(step);
 		}
-		
+
+		for (precaution in component.precautions) {
+			(function(p) {
+				liquidPromises.push(engine
+									.parseAndRender(component.precautions[p], component)
+									.then(function(renderedPrecautions) {
+										component.precautions = renderedPrecautions;
+									}).catch(function(e) {
+										console.log(e);
+									}));
+			})(precaution);
+
+		}
+		 
 	} catch (e) {
 		console.log(e);
 		component.precautions = yaml.safeLoad(fs.readFileSync(componentPath + "/precautions.yaml", 'utf8'));
