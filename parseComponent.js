@@ -106,22 +106,45 @@ function parseComponent(componentPath, outDir, compModelName) {
 			})(step);
 		}
 
+		var precautionsArray = [];
+
 		for (precaution in component.precautions) {
 			(function(p) {
+				
 				liquidPromises.push(engine
 									.parseAndRender(component.precautions[p], component)
 									.then(function(renderedPrecautions) {
-										component.precautions = renderedPrecautions;
+										precautionsArray.push(renderedPrecautions);
 									}).catch(function(e) {
 										console.log(e);
 									}));
 			})(precaution);
 
 		}
+
+		component.precautions = precautionsArray;
 		 
 	} catch (e) {
 		console.log(e);
 		component.precautions = yaml.safeLoad(fs.readFileSync(componentPath + "/precautions.yaml", 'utf8'));
+		var precautionsArray = [];
+
+		for (precaution in component.precautions) {
+			(function(p) {
+				
+				liquidPromises.push(engine
+									.parseAndRender(component.precautions[p], component)
+									.then(function(renderedPrecautions) {
+										precautionsArray.push(renderedPrecautions);
+									}).catch(function(e) {
+										console.log(e);
+									}));
+			})(precaution);
+
+		}
+
+		component.precautions = precautionsArray;
+
 	}
 
 	seanandalexa = new Promise(resolve => setTimeout(resolve, 5000));
