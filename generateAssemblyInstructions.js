@@ -105,7 +105,7 @@ var flatPartBOMTemplate = fs.readFileSync(templatePath + '/' + flattenedPartsBOM
 engine
     .parseAndRender(flatPartBOMTemplate, flatPartBOM)
     .then(function(fulfilled) {
-        fs.writeFileSync(outputDirName + '/flatPartBOM.adoc', fulfilled);
+        fs.writeFileSync(outputDirName + '/flatPartsBOM.adoc', fulfilled);
     }).catch(function(e) {
         console.log(e);
     });
