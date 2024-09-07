@@ -34,40 +34,35 @@ var flatPartBOM = {};
 var flatToolBOM = {};
 
 function traverseParts(component) {
-
     for (p in component.parts) {
         var part = component.parts[p];
-        //console.log(part);
-        //console.log(part.selectedOption);
+        
         let selectedComponent = part.options[part.selectedOption];
-        //console.log(selectedPart);
+        
         let selectedComponentDetails = component.components[selectedComponent];
         
+        //console.log(selectedComponentDetails);
 
+        if (Object.keys(selectedComponentDetails.parts).length === 0) {
         //TODO add component data to flatPartBOM
-        if (flatPartBOM.hasOwnProperty(selectedComponent)){
-            if (flatPartBOM[selectedComponent].hasOwnProperty('count')){
-                flatPartBOM[selectedComponent]['count'] += part.quantity;
+            if (flatPartBOM.hasOwnProperty(selectedComponent)){
+                if (flatPartBOM[selectedComponent].hasOwnProperty('count')){
+                    flatPartBOM[selectedComponent]['count'] += part.quantity;
+                } else {
+                    flatPartBOM[selectedComponent]['count'] = part.quantity;
+                };
             } else {
-                flatPartBOM[selectedComponent]['count'] = part.quantity;
-            };
-        } else {
-            flatPartBOM[selectedComponent] = {};
+                flatPartBOM[selectedComponent] = {};
 
-            if (flatPartBOM[selectedComponent].hasOwnProperty('count')){
-                flatPartBOM[selectedComponent]['count'] += part.quantity;
-            } else {
-                flatPartBOM[selectedComponent]['count'] = part.quantity;
-            };
-        }
-        
-        
-        
-        
-        //currentCount = part.quantity
+                if (flatPartBOM[selectedComponent].hasOwnProperty('count')){
+                    flatPartBOM[selectedComponent]['count'] += part.quantity;
+                } else {
+                    flatPartBOM[selectedComponent]['count'] = part.quantity;
+                };
+            }
+        };
+        traverseParts(selectedComponentDetails);
 
-        //flatPartBOM[selectedComponent].TryGetValue(count, out currentCount);
-        //TODO RECURSE
     }
 
 
