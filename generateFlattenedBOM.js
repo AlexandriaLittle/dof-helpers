@@ -129,9 +129,13 @@ var model = yaml.safeLoad(fs.readFileSync(topComponentPath + '/' + outputDirName
 traverseParts(model);
 //console.log(flatPartBOM);
 var flattenedPartsBOMFilePath = topComponentPath + '/' + outputDirName + '/' + flattenedPartsBOMFileName;
+
+flatPartBOM = {'components' : flatPartBOM};
 fs.writeFileSync(flattenedPartsBOMFilePath, yaml.safeDump(flatPartBOM));
 
 traverseTools(model);
 //console.log(flatToolBOM);
 var flattenedToolsBOMFilePath = topComponentPath + '/' + outputDirName + '/' + flattenedToolsBOMFileName;
+
+flatToolBOM = {'components' : flatToolBOM};
 fs.writeFileSync(flattenedToolsBOMFilePath, yaml.safeDump(flatToolBOM));

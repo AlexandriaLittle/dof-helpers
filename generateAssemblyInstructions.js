@@ -11,6 +11,10 @@ var outputDirName = 'dist';
 var componentModel = 'component.yaml'
 var templatePath = __dirname;
 var templateName = 'assemblyInstructions.adoc.liquid'
+var flattenedPartsBOMFileName = 'flatPartsBOM.yaml'
+var flattenedToolsBOMFileName = 'flatToolsBOM.yaml'
+var flattenedPartsBOMTemplateName = 'flatPartsBOM.adoc.liquid'
+var flattenedToolsBOMTemplateName = 'flatToolsBOM.adoc.liquid'
 
 // handle arguments
 if (argv['h'] || argv['help']) {  // if asked for help, print it and exit
@@ -93,6 +97,19 @@ data.generationDate = new Date().toLocaleDateString("en-US", {
     });
 data.topComponent = topComponent;
 data.components = uniqueArray;
+
+
+var templateFile = fs.readFileSync(templatePath + '/' + templateName, 'utf8');
+var flatPartBOM = yaml.safeLoad(fs.readFileSync(topComponentPath + "/" + outputDirName + "/" + flattenedPartsBOMFileName, 'utf8'));
+var flatPartBOMTemplate = fs.readFileSync(templatePath + '/' + flattenedPartsBOMTemplateName, 'utf8');
+engine
+    .parseAndRender(flatPartBOMTemplate, flatPartBOM)
+    .then(function(fulfilled) {
+        fs.writeFileSync(outputDirName + '/flatPartBOM.adoc', fulfilled);
+    }).catch(function(e) {
+        console.log(e);
+    });
+
 
 var templateFile = fs.readFileSync(templatePath + '/' + templateName, 'utf8');
 engine
