@@ -99,13 +99,23 @@ data.topComponent = topComponent;
 data.components = uniqueArray;
 
 
-var templateFile = fs.readFileSync(templatePath + '/' + templateName, 'utf8');
 var flatPartBOM = yaml.safeLoad(fs.readFileSync(topComponentPath + "/" + outputDirName + "/" + flattenedPartsBOMFileName, 'utf8'));
 var flatPartBOMTemplate = fs.readFileSync(templatePath + '/' + flattenedPartsBOMTemplateName, 'utf8');
 engine
     .parseAndRender(flatPartBOMTemplate, flatPartBOM)
     .then(function(fulfilled) {
         fs.writeFileSync(outputDirName + '/flatPartsBOM.adoc', fulfilled);
+    }).catch(function(e) {
+        console.log(e);
+    });
+
+
+var flatToolBOM = yaml.safeLoad(fs.readFileSync(topComponentPath + "/" + outputDirName + "/" + flattenedToolsBOMFileName, 'utf8'));
+var flatToolBOMTemplate = fs.readFileSync(templatePath + '/' + flattenedToolsBOMTemplateName, 'utf8');
+engine
+    .parseAndRender(flatToolBOMTemplate, flatToolBOM)
+    .then(function(fulfilled) {
+        fs.writeFileSync(outputDirName + '/flatToolsBOM.adoc', fulfilled);
     }).catch(function(e) {
         console.log(e);
     });
