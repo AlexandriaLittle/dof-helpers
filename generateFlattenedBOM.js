@@ -29,7 +29,7 @@ if (argv['h'] || argv['help']) {  // if asked for help, print it and exit
         componentModel = argv['componentModel'];
 }
 
-// Dictionary to store counts
+// Dictionary to store quantities
 var flatPartBOM = {};
 var flatToolBOM = {};
 
@@ -37,31 +37,31 @@ function traverseParts(component) {
     for (p in component.parts) {
         var part = component.parts[p];
         
-        let selectedComponent = part.options[part.selectedOption];
+        let componentName = part.options[part.selectedOption];
         
-        let selectedComponentDetails = component.components[selectedComponent];
+        let selectedComponent = component.components[componentName];
         
-        //console.log(selectedComponentDetails);
+        //console.log(selectedComponent);
 
-        if (Object.keys(selectedComponentDetails.parts).length === 0) {
+        if (Object.keys(selectedComponent.parts).length === 0) {
         //TODO add component data to flatPartBOM
-            if (flatPartBOM.hasOwnProperty(selectedComponent)){
-                if (flatPartBOM[selectedComponent].hasOwnProperty('count')){
-                    flatPartBOM[selectedComponent]['count'] += part.quantity;
+            if (flatPartBOM.hasOwnProperty(componentName)){
+                if (flatPartBOM[componentName].hasOwnProperty('quantity')){
+                    flatPartBOM[componentName]['quantity'] += part.quantity;
                 } else {
-                    flatPartBOM[selectedComponent]['count'] = part.quantity;
+                    flatPartBOM[componentName]['quantity'] = part.quantity;
                 };
             } else {
-                flatPartBOM[selectedComponent] = {};
+                flatPartBOM[componentName] = {};
 
-                if (flatPartBOM[selectedComponent].hasOwnProperty('count')){
-                    flatPartBOM[selectedComponent]['count'] += part.quantity;
+                if (flatPartBOM[componentName].hasOwnProperty('quantity')){
+                    flatPartBOM[componentName]['quantity'] += part.quantity;
                 } else {
-                    flatPartBOM[selectedComponent]['count'] = part.quantity;
+                    flatPartBOM[componentName]['quantity'] = part.quantity;
                 };
             }
         };
-        traverseParts(selectedComponentDetails);
+        traverseParts(selectedComponent);
 
     }
 
