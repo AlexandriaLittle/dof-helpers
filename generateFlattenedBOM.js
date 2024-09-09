@@ -35,7 +35,7 @@ if (argv['h'] || argv['help']) {  // if asked for help, print it and exit
 var flatPartBOM = {};
 var flatToolBOM = {};
 
-function traverseParts(component) {
+function traverseParts(component, depthCounter, depthMultiplier) {
     for (p in component.parts) {
         var part = component.parts[p];
         
@@ -43,7 +43,32 @@ function traverseParts(component) {
         
         let selectedComponent = component.components[componentName];
         
-        //console.log(selectedComponent);
+
+
+        if (typeof traverseParts.tempDepthCounter === 'undefined'){
+            traverseParts.tempDepthCounter = 1;
+        } else {
+            traverseParts.tempDepthCounter++;
+        }
+        
+        if (typeof part.quantity === "number"){
+            if (!Array.isArray(depthMultiplier) || !depthMultiplier.length){
+                depthMultiplier = [];
+                depthMultiplier.push(part.quantity);
+                
+            } else {
+                
+                let lastDepthMultiplier = depthMultiplier.at(-1);
+                
+                let currentDepthMultiplier = lastDepthMultiplier * part.quantity;
+                depthMultiplier.push(currentDepthMultiplier);
+            }
+        } else {
+            console.log("Part doesn't have a quantity number???")
+        }
+
+        console.log(depthMultiplier);
+        console.log(traverseParts.tempDepthCounter);
 
         if (Object.keys(selectedComponent.parts).length === 0) {
 
@@ -66,8 +91,13 @@ function traverseParts(component) {
             flatPartBOM[componentName]['description'] = selectedComponent.description;
             flatPartBOM[componentName]['quantityUnits'] = part.quantityUnits;
         };
-        traverseParts(selectedComponent);
 
+        
+        traverseParts(selectedComponent, depthCounter, depthMultiplier);
+        if (typeof traverseParts.tempDepthCounter !== 'undefined'){
+            traverseParts.tempDepthCounter--;
+        }         
+        depthMultiplier.pop();
     };
 
 };
@@ -125,8 +155,10 @@ function traverseTools(component) {
 
 var model = yaml.safeLoad(fs.readFileSync(topComponentPath + '/' + outputDirName + '/' + componentModel, 'utf8'));
 
+var depthCounterParts = null;
+var depthMultiplierParts = null;
 
-traverseParts(model);
+traverseParts(model, depthCounterParts, depthMultiplierParts);
 //console.log(flatPartBOM);
 var flattenedPartsBOMFilePath = topComponentPath + '/' + outputDirName + '/' + flattenedPartsBOMFileName;
 
