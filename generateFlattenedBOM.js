@@ -92,7 +92,7 @@ function traverseParts(component, depthMultiplier) {
         };
 
         
-        traverseParts(selectedComponent, depthCounter, depthMultiplier);
+        traverseParts(selectedComponent, depthMultiplier);
         // if (typeof traverseParts.tempDepthCounter !== 'undefined'){
         //     traverseParts.tempDepthCounter--;
         // }         
