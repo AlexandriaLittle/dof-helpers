@@ -160,11 +160,11 @@ traverseParts(model, depthMultiplierParts);
 var flattenedPartsBOMFilePath = topComponentPath + '/' + outputDirName + '/' + flattenedPartsBOMFileName;
 
 flatPartBOM = {'components' : flatPartBOM};
-fs.writeFileSync(flattenedPartsBOMFilePath, yaml.safeDump(flatPartBOM));
+fs.writeFileSync(flattenedPartsBOMFilePath, yaml.safeDump(flatPartBOM, {sortKeys: true}));
 
 traverseTools(model);
 //console.log(flatToolBOM);
 var flattenedToolsBOMFilePath = topComponentPath + '/' + outputDirName + '/' + flattenedToolsBOMFileName;
 
 flatToolBOM = {'components' : flatToolBOM};
-fs.writeFileSync(flattenedToolsBOMFilePath, yaml.safeDump(flatToolBOM));
+fs.writeFileSync(flattenedToolsBOMFilePath, yaml.safeDump(flatToolBOM, {sortKeys: true}));
