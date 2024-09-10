@@ -74,6 +74,7 @@ function parseComponent(componentPath, outDir, compModelName) {
 			var componentsList = fs.readdirSync(componentPath + "/components/").sort();	
 		} catch (error) {
 			console.log("Experienced error accessing folder: " + componentPath + "/components/")
+			throw new Error("Experienced error accessing folder: " + componentPath + "/components/")
 		}
 		
 		
