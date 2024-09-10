@@ -69,7 +69,15 @@ function parseComponent(componentPath, outDir, compModelName) {
 	
 	try {
 		// read in sub-components
-		var componentsList = fs.readdirSync(componentPath + "/components/").sort();
+		
+		try {
+			var componentsList = fs.readdirSync(componentPath + "/components/").sort();	
+		} catch (error) {
+			console.log("Experienced error accessing folder: " + componentPath + "/components/")
+		}
+		
+		
+		
 		for (i in componentsList) {
 			var subComponent = parseComponent(componentPath + "/components/" + componentsList[i], outDir, compModelName);
 			component.components[subComponent.name] = subComponent;
@@ -92,7 +100,7 @@ function parseComponent(componentPath, outDir, compModelName) {
 									.parseAndRender(component.assemblySteps[s].summary, component)
 									.then(function(renderedSummary) {
 										component.assemblySteps[s].summary = renderedSummary;
-										console.log(component.assemblySteps[s].summary) //ANL
+										// console.log(component.assemblySteps[s].summary) //ANL
 									}).catch(function(e) {
 										console.log(e);
 									}));
@@ -154,11 +162,16 @@ function parseComponent(componentPath, outDir, compModelName) {
 	Promise.allSettled(liquidPromises)
 		.then(function() {
 			var componentFileName = componentPath + '/' + outDir + '/' + compModelName;
-			fs.writeFileSync(componentFileName, yaml.safeDump(component));
-			console.log('Component Model ' + componentFileName + ' built');
-				}).catch(function(e) {
-			console.log(e);
-		});
+			try {
+				
+				fs.writeFileSync(componentFileName, yaml.safeDump(component));	
+				console.log('Component Model ' + componentFileName + ' built');
+
+			} catch (error) {
+				console.log("Experienced error accessing file: " + componentFileName);
+			}
+			
+				});
 	
 	return component;
 }
